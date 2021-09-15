@@ -1,0 +1,83 @@
+{
+	"name": "cppinsights-vscode",
+	"displayName": "C++ Insights",
+	"description": "vscode extension for C++ Insights",
+	"version": "0.0.1",
+	"author": {
+		"name": "Tobias Fuchs",
+		"url": "devtbi.io"
+	},
+	"engines": {
+		"vscode": "^1.54.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:cppinsights-vscode.insights"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "cppinsights-vscode.insights",
+				"title": "Show C++ Insights"
+			}
+		],
+		"configuration": [
+			{
+				"title": "C++ Insights",
+				"properties": {
+					"cppinsights-vscode.buildDirectory": {
+						"type": "string",
+						"default": [],
+						"description": "Build directory of the compilation database",
+						"scope": "resource"
+					},
+					"cppinsights-vscode.path": {
+						"type": "string",
+						"default": "insights",
+						"description": "Path to the cppinsights executable (insights)",
+						"scope": "resource"
+					},
+					"cppinsights-vscode.diff": {
+						"type": "boolean",
+						"description": "Show diff instead of insights output",
+						"scope": "resource"
+					},
+					"cppinsights-vscode.args": {
+						"type": "array",
+						"default": [],
+						"description": "Additional arguments",
+						"scope": "resource"
+					}
+				}
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.54.0",
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.2.2",
+		"@types/node": "14.x",
+		"eslint": "^7.27.0",
+		"@typescript-eslint/eslint-plugin": "^4.26.0",
+		"@typescript-eslint/parser": "^4.26.0",
+		"glob": "^7.1.7",
+		"mocha": "^8.4.0",
+		"typescript": "^4.3.2",
+		"vscode-test": "^1.5.2"
+	},
+	"dependencies": {
+		"@types/tmp": "^0.1.0",
+		"tmp": "^0.1.0"
+	}
+}
