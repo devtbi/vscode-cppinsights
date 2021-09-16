@@ -12,7 +12,7 @@ For example if there is an image subfolder under your extension project workspac
 
 ## Requirements
 
-This extension requies C++ Insights of @andreasfertig.
+This extension requires C++ Insights of @andreasfertig.
 C++ Insights can be found here:
 https://github.com/andreasfertig/cppinsights
 Build or download the latest release.
