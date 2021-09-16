@@ -14,19 +14,24 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:cppinsights-vscode.insights"
+		"onCommand:cppinsights-vscode.insights",
+		"onCommand:cppinsights-vscode.insightsDiff"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
 				"command": "cppinsights-vscode.insights",
-				"title": "Show C++ Insights"
+				"title": "Show C++ insights"
+			},
+			{
+				"command": "cppinsights-vscode.insightsDiff",
+				"title": "Show C++ insights diff with original"
 			}
 		],
 		"configuration": [
 			{
-				"title": "C++ Insights",
+				"title": "C++ insights",
 				"properties": {
 					"cppinsights-vscode.buildDirectory": {
 						"type": "string",

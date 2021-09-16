@@ -9,16 +9,23 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log('Activating "cppinsights-vscode"');
 
 
-	let disposable = registerCommands(context);
+	registerCommands(context);
 }
 
 /**
  * Register all commands
  */
 function registerCommands(context: vscode.ExtensionContext) {
-	return vscode.commands.registerCommand('cppinsights-vscode.insights', () => {
+	vscode.commands.registerTextEditorCommand('cppinsights-vscode.insights', () => {
 		executeInsights();
 	});
+
+	vscode.commands.registerTextEditorCommand('cppinsights-vscode.insightsDiff', () => {
+		executeInsights(true);
+	});
+	// TODO format, diff as parameter to command instead of extra commands, no-build-dir
+
+	// TODO check register result
 }
 
 /**
@@ -49,7 +56,7 @@ function createExecutableBase(config: vscode.WorkspaceConfiguration, cmake_build
 /**
  * Execute insights command
  */
-function executeInsights() {
+function executeInsights(show_diff: boolean = false) {
 	let configuration = vscode.workspace.getConfiguration('cppinsights-vscode');
 
 
@@ -62,11 +69,14 @@ function executeInsights() {
 	let input_editor = vscode.window.activeTextEditor;
 	if (input_editor && !input_editor.document.isUntitled && input_editor.document.fileName) {
 		let input_document = input_editor!.document;
-		let insights_command = createExecutableBase(configuration, vscode.workspace.getConfiguration('cmake').get('buildDirectory'));
+
+		// TODO improve condition for cmake usage... getWorkspaceFolder b/c default is ${workspaceFolder}/build
+		let insights_command = createExecutableBase(configuration, vscode.workspace.getWorkspaceFolder(input_document.uri) ? vscode.workspace.getConfiguration('cmake').get('buildDirectory') : undefined);
 		insights_command.args.push(input_document.fileName!);
 
 		console.log("Executing " + JSON.stringify(insights_command));
 
+		// TODO code variables are probably not resloved, use vscode Task interface
 		// TODO use execFile or sth else which allows for passing args as string[]
 		const exec_command = insights_command.path + ' ' + insights_command.args.join(' ');
 		child.exec(exec_command, (error: child.ExecException | null, stdout: string, stderr: string) => {
@@ -92,7 +102,7 @@ function executeInsights() {
 
 					format(output_document.uri);
 
-					if (!configuration.get("diff")) {
+					if (!configuration.get("diff") && !show_diff) {
 						vscode.window.showTextDocument(output_document, { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true, preview: true }).then((editor: vscode.TextEditor) => {
 						});
 					}
