@@ -45,6 +45,7 @@ function createExecutableBase(config: vscode.WorkspaceConfiguration, cmake_build
 		args.push("-p=\"" + build_dir + "\"");
 
 	if (config.get<string[]>('args')) {
+		args.push("--");
 		args = [...args, ...config.get<string[]>('args')!];
 	}
 
@@ -59,6 +60,8 @@ function createExecutableBase(config: vscode.WorkspaceConfiguration, cmake_build
 function executeInsights(show_diff: boolean = false) {
 	let configuration = vscode.workspace.getConfiguration('cppinsights-vscode');
 
+	// TODO on save
+	// TODO formatter use configured settings
 
 	// TODO Impl as TextDocumentProvider
 	// TODO QuickDiffProvider?
@@ -72,7 +75,7 @@ function executeInsights(show_diff: boolean = false) {
 
 		// TODO improve condition for cmake usage... getWorkspaceFolder b/c default is ${workspaceFolder}/build
 		let insights_command = createExecutableBase(configuration, vscode.workspace.getWorkspaceFolder(input_document.uri) ? vscode.workspace.getConfiguration('cmake').get('buildDirectory') : undefined);
-		insights_command.args.push(input_document.fileName!);
+		insights_command.args = [input_document.fileName!, ...insights_command.args];
 
 		console.log("Executing " + JSON.stringify(insights_command));
 
@@ -81,7 +84,7 @@ function executeInsights(show_diff: boolean = false) {
 		const exec_command = insights_command.path + ' ' + insights_command.args.join(' ');
 		child.exec(exec_command, (error: child.ExecException | null, stdout: string, stderr: string) => {
 			if (error) {
-				vscode.window.showErrorMessage('insights failed:\n' + exec_command + '\n' + stderr);
+				vscode.window.showErrorMessage('insights failed:\n' + exec_command + '\n' + stderr + '\n' + stdout);
 				console.error(error);
 				console.error(stderr);
 				return;
