@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as tmp from 'tmp';
-import * as child from 'child_process';
 import path = require('path');
+
+const taskSource = "C++ insights";
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -29,7 +30,7 @@ function registerCommands(context: vscode.ExtensionContext) {
 /**
  * Create the skeleton insights command from the configuration
  */
-export function createCall(config: vscode.WorkspaceConfiguration, cmake_build_dir: string | undefined, filePath: string): { path: string, args: (string)[] } {
+export function createCall(config: vscode.WorkspaceConfiguration, cmake_build_dir: string | undefined, filePath: string, outputPath: string | undefined): { path: string, args: (string)[] } {
 	let build_dir = cmake_build_dir || config.get('buildDirectory');
 
 	if (!config.get('path')) {
@@ -44,6 +45,11 @@ export function createCall(config: vscode.WorkspaceConfiguration, cmake_build_di
 	if (config.get<string[]>('args')) {
 		args.push("--");
 		args = [...args, ...config.get<string[]>('args')!];
+	}
+
+	if (outputPath) {
+		args.push(">");
+		args.push(outputPath);
 	}
 
 	return {
@@ -88,48 +94,83 @@ function executeInsights2(show_diff: boolean = false, input_document: vscode.Tex
 	let configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
 
 
-	// TODO improve condition for cmake usage... getWorkspaceFolder b/c default is ${workspaceFolder}/build
-	const insights_command = createCall(configuration, vscode.workspace.getWorkspaceFolder(input_document.uri) ? vscode.workspace.getConfiguration('cmake').get('buildDirectory') : undefined, input_path);
+	// TODO are code variables resolved, e.g. workspaceFolder?
 
-	console.log("Executing " + JSON.stringify(insights_command));
+	// discardDescriptor is required, otherwise cmd is not executed b/c file is used by another process
+	// TODO maybe delete tmp file
+	tmp.file({ prefix: path.basename(input_path), postfix: '.cpp', keep: false, discardDescriptor: true }, function (err, output_path) {
+		// TODO improve condition for cmake usage... getWorkspaceFolder b/c default is ${workspaceFolder}/build
+		const insights_command = createCall(configuration, vscode.workspace.getWorkspaceFolder(input_document.uri) ? vscode.workspace.getConfiguration('cmake').get('buildDirectory') : undefined, input_path, output_path);
 
-	// TODO code variables are probably not resloved, use vscode Task interface
-	// TODO use execFile or sth else which allows for passing args as string[]
-	const exec_command = callToString(insights_command);
-	child.exec(exec_command, (error: child.ExecException | null, stdout: string, stderr: string) => {
-		if (error) {
-			vscode.window.showErrorMessage('insights failed:\n' + exec_command + '\n' + stderr + '\n' + stdout);
-			console.error(error);
-			console.error(stderr);
-			return;
+		console.log("Executing " + JSON.stringify(insights_command));
+
+		const sh = new vscode.ShellExecution(insights_command.path, insights_command.args);
+		//const sh = new vscode.ProcessExecution(insights_command.path, insights_command.args)
+
+		const tsk = new vscode.Task({} as vscode.TaskDefinition, vscode.TaskScope.Global, "insights task", taskSource, sh, undefined /*matcher*/);
+		tsk.runOptions = { reevaluateOnRerun: true } as vscode.RunOptions;
+		tsk.presentationOptions = { reveal: vscode.TaskRevealKind.Silent } as vscode.TaskPresentationOptions;
+
+		vscode.tasks.executeTask(tsk).then(() => {
+			console.log("Task executeTask");
+		}, (rejection_reason) => {
+			console.error(rejection_reason);
+		});
+
+		const disposable = vscode.tasks.onDidEndTaskProcess((event) => {
+			if (event.execution.task.source === taskSource) {
+				console.log("Task onDidEndTaskProcess")
+				try {
+					if (event.exitCode != 0) {
+						vscode.window.showErrorMessage("Insights task failed \nCheck task pane for more info.");
+						console.error("Task failed");
+						return;
+					} else {
+						openInsightsOutput(input_document, output_path, configuration, options, show_diff);
+					}
+				} finally {
+					disposable.dispose();
+				}
+			}
+		});
+	});
+	// child.exec(exec_command, (error: child.ExecException | null, stdout: string, stderr: string) => {
+	// 	if (error) {
+	// 		vscode.window.showErrorMessage('insights failed:\n' + exec_command + '\n' + stderr + '\n' + stdout);
+	// 		console.error(error);
+	// 		console.error(stderr);
+	// 		return;
+	// 	}
+
+	// 	// store output in temporary as workaround for annoying save dialog on close
+	// 	tmp.file({ prefix: path.basename(input_path), postfix: '.cpp', keep: false }, function (err: string, output_path: string) {
+	// 		if (err) {
+	// 			vscode.window.showErrorMessage('Failed to create temporary file (' + err + ')');
+	// 			return;
+	// 		}
+	// 		fs.writeFileSync(output_path, stdout);
+	// 		openInsightsOutput(input_document, output_path, configuration, options, show_diff);
+	// 	});
+	// });
+}
+
+function openInsightsOutput(input_document: vscode.TextDocument, output_path: string, configuration: vscode.WorkspaceConfiguration, options: vscode.TextEditorOptions, show_diff: boolean) {
+	let output_uri = vscode.Uri.file(output_path);
+
+	// TODO clarify if formatting requires open TextEditor->visually bad, but seems more reliable
+	let formatting = (doc: vscode.TextDocument) => { format(doc, options, configuration.get("experimental") != undefined ? configuration.get("experimental")! : false) };
+
+
+	// was { language: vscode.window.activeTextEditor?.document.languageId, content: stdout }
+	console.log("Openning insights output");
+	vscode.workspace.openTextDocument(output_uri).then((output_document) => {
+		if (!configuration.get("diff") && !show_diff) {
+			show(output_document, formatting, options);
+		}
+		else {
+			diff(input_document, output_document, formatting);
 		}
 
-		// store output in temporary as workaround for annoying save dialog on close
-		tmp.file({ prefix: path.basename(input_path), postfix: '.cpp', keep: false }, function (err: string, output_path: string) {
-			if (err) {
-				vscode.window.showErrorMessage('Failed to create temporary file (' + err + ')');
-				return;
-			}
-			fs.writeFileSync(output_path, stdout);
-
-			let output_uri = vscode.Uri.file(output_path);
-
-			// TODO clarify if formatting requires open TextEditor->visually bad, but seems more reliable
-			let formatting = (doc: vscode.TextDocument) => { format(doc, options, configuration.get("experimental") != undefined ? configuration.get("experimental")! : false) };
-
-
-			// was { language: vscode.window.activeTextEditor?.document.languageId, content: stdout }
-			console.log("Openning insights output");
-			vscode.workspace.openTextDocument(output_uri).then((output_document) => {
-				if (!configuration.get("diff") && !show_diff) {
-					show(output_document, formatting, options);
-				}
-				else {
-					diff(input_document, output_document, formatting);
-				}
-
-			});
-		});
 	});
 }
 

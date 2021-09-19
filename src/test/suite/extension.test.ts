@@ -1,5 +1,7 @@
 import * as assert from 'assert';
 import * as child from 'child_process';
+import * as tmp from 'tmp';
+import * as path from 'path';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
@@ -34,13 +36,30 @@ suite('Extension Test Suite', () => {
 
 		let uri = vscode.window.visibleTextEditors[0].document.uri;
 
-		let insights_command = ins.createCall(configuration, undefined, uri.path);
+		let insights_command = ins.createCall(configuration, undefined, uri.path, undefined);
 
 		const exec_command = ins.callToString(insights_command);
 		return child.exec(exec_command, (error: child.ExecException | null, stdout: string, stderr: string) => {
 			if (error) {
 				assert.fail("Unable to run insights");
 			}
+		});
+	});
+
+	test('Run executable tmp path', () => {
+		let configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
+
+		let uri = vscode.window.visibleTextEditors[0].document.uri;
+
+		tmp.file({ prefix: path.basename("test"), postfix: '.cpp', keep: false, discardDescriptor: true }, function (err, output_path) {
+			let insights_command = ins.createCall(configuration, undefined, uri.path, output_path);
+
+			const exec_command = ins.callToString(insights_command);
+			return child.exec(exec_command, (error: child.ExecException | null, stdout: string, stderr: string) => {
+				if (error) {
+					assert.fail("Unable to run insights");
+				}
+			});
 		});
 	});
 
