@@ -1,15 +1,47 @@
 import * as assert from 'assert';
+import * as child from 'child_process';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
 import * as vscode from 'vscode';
-// import * as myExtension from '../../extension';
+import * as ins from '../../extension';
+
+export async function getExtension() {
+	const ext = vscode.extensions.getExtension('vscode-cppinsights');
+	if (!ext) {
+		throw new Error('Extension doesn\'t exist');
+	}
+	return ext.isActive ? Promise.resolve(ext.exports) : ext.activate();
+}
 
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
 
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
+	// test('Load extension', () => {
+	// 	getExtension();
+	// });
+
+	test('Execute command', () => {
+		return vscode.commands.executeCommand('vscode-cppinsights.insights').then(() => {
+			console.log("Command success");
+		}, (rejection_reason) => {
+			assert.fail("Unable to run command");
+		});
 	});
+
+	test('Run executable', () => {
+		let configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
+
+		let uri = vscode.window.visibleTextEditors[0].document.uri;
+
+		let insights_command = ins.createCall(configuration, undefined, uri.path);
+
+		const exec_command = ins.callToString(insights_command);
+		return child.exec(exec_command, (error: child.ExecException | null, stdout: string, stderr: string) => {
+			if (error) {
+				assert.fail("Unable to run insights");
+			}
+		});
+	});
+
 });
