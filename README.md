@@ -18,6 +18,10 @@ https://github.com/andreasfertig/cppinsights
 Build or download the latest release.
 Specify the directory to cppinsights binary in (link to settings) `cppinsights-vscode.path`.
 
+## Commands
+* `cppinsights-vscode.insights`: Show C++ insights
+* `cppinsights-vscode.insightsDiff`: Show C++ insights diff with original
+
 ## Extension Settings
 
 This extension contributes the following settings:
