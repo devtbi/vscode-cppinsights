@@ -16,20 +16,20 @@ This extension requires C++ Insights of @andreasfertig.
 C++ Insights can be found here:
 https://github.com/andreasfertig/cppinsights
 Build or download the latest release.
-Specify the directory to cppinsights binary in (link to settings) `cppinsights-vscode.path`.
+Specify the directory to cppinsights binary in (link to settings) `vscode-cppinsights.path`.
 
 ## Commands
-* `cppinsights-vscode.insights`: Show C++ insights
-* `cppinsights-vscode.insightsDiff`: Show C++ insights diff with original
+* `vscode-cppinsights.insights`: Show C++ insights
+* `vscode-cppinsights.insightsDiff`: Show C++ insights diff with original
 
 ## Extension Settings
 
 This extension contributes the following settings:
 
-* `cppinsights-vscode.path`
-* `cppinsights-vscode.buildDirector`
-* `cppinsights-vscode.diff`
-* `cppinsights-vscode.args`
+* `vscode-cppinsights.path`
+* `vscode-cppinsights.buildDirector`
+* `vscode-cppinsights.diff`
+* `vscode-cppinsights.args`
 
 
 <!-- -----------------------------------------------------------------------------------------------------------

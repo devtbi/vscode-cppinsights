@@ -6,7 +6,7 @@ import path = require('path');
 
 export function activate(context: vscode.ExtensionContext) {
 
-	console.log('Activating "cppinsights-vscode"');
+	console.log('Activating "vscode-cppinsights"');
 
 
 	registerCommands(context);
@@ -16,11 +16,11 @@ export function activate(context: vscode.ExtensionContext) {
  * Register all commands
  */
 function registerCommands(context: vscode.ExtensionContext) {
-	vscode.commands.registerTextEditorCommand('cppinsights-vscode.insights', () => {
+	vscode.commands.registerTextEditorCommand('vscode-cppinsights.insights', () => {
 		executeInsights();
 	});
 
-	vscode.commands.registerTextEditorCommand('cppinsights-vscode.insightsDiff', () => {
+	vscode.commands.registerTextEditorCommand('vscode-cppinsights.insightsDiff', () => {
 		executeInsights(true);
 	});
 	// TODO format, diff as parameter to command instead of extra commands, no-build-dir

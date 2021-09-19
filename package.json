@@ -1,5 +1,5 @@
 {
-	"name": "cppinsights-vscode",
+	"name": "vscode-cppinsights",
 	"displayName": "C++ Insights",
 	"description": "vscode extension for C++ Insights",
 	"version": "0.0.1",
@@ -14,18 +14,18 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:cppinsights-vscode.insights",
-		"onCommand:cppinsights-vscode.insightsDiff"
+		"onCommand:vscode-cppinsights.insights",
+		"onCommand:vscode-cppinsights.insightsDiff"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "cppinsights-vscode.insights",
+				"command": "vscode-cppinsights.insights",
 				"title": "Show C++ insights"
 			},
 			{
-				"command": "cppinsights-vscode.insightsDiff",
+				"command": "vscode-cppinsights.insightsDiff",
 				"title": "Show C++ insights diff with original"
 			}
 		],
@@ -33,27 +33,27 @@
 			{
 				"title": "C++ insights",
 				"properties": {
-					"cppinsights-vscode.buildDirectory": {
+					"vscode-cppinsights.buildDirectory": {
 						"type": "string",
 						"default": [],
-						"description": "Build directory of the compilation database",
+						"description": "Build directory of the compilation database.",
 						"scope": "resource"
 					},
-					"cppinsights-vscode.path": {
+					"vscode-cppinsights.path": {
 						"type": "string",
 						"default": "insights",
-						"description": "Path to the cppinsights executable (insights)",
+						"description": "Path to the cppinsights executable (insights).",
 						"scope": "resource"
 					},
-					"cppinsights-vscode.diff": {
+					"vscode-cppinsights.diff": {
 						"type": "boolean",
-						"description": "Show diff instead of insights output",
+						"description": "Show diff instead of insights output.",
 						"scope": "resource"
 					},
-					"cppinsights-vscode.args": {
+					"vscode-cppinsights.args": {
 						"type": "array",
 						"default": [],
-						"description": "Additional arguments",
+						"description": "Additional arguments. The final call to insights will look like this: <path> <file> -p <buildDirectory> -- <args>",
 						"scope": "resource"
 					}
 				}
