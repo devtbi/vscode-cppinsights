@@ -55,6 +55,11 @@
 						"default": [],
 						"description": "Additional arguments. The final call to insights will look like this: <path> <file> -p <buildDirectory> -- <args>",
 						"scope": "resource"
+					},
+					"vscode-cppinsights.experimental": {
+						"type": "boolean",
+						"description": "Enable experimental features",
+						"scope": "application"
 					}
 				}
 			}
