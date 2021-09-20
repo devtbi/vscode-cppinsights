@@ -12,11 +12,11 @@ For example if there is an image subfolder under your extension project workspac
 
 ## Requirements
 
-This extension requires C++ Insights of @andreasfertig.
+This extension requires @andreasfertig's C++ Insights.
 C++ Insights can be found here:
 https://github.com/andreasfertig/cppinsights
 Build or download the latest release.
-Specify the directory to cppinsights binary in (link to settings) `vscode-cppinsights.path`.
+Specify the directory to the cppinsights binary in `vscode-cppinsights.path`.
 
 ## Commands
 * `vscode-cppinsights.insights`: Show C++ insights
@@ -30,6 +30,7 @@ This extension contributes the following settings:
 * `vscode-cppinsights.buildDirector`
 * `vscode-cppinsights.diff`
 * `vscode-cppinsights.args`
+* `vscode-cppinsights.experimental`
 
 
 <!-- -----------------------------------------------------------------------------------------------------------
