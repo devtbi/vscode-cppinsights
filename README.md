@@ -26,7 +26,7 @@ Build or download the latest release and specify the path to the cppinsights bin
 This extension contributes the following settings:
 
 * `vscode-cppinsights.path`
-* `vscode-cppinsights.buildDirector`
+* `vscode-cppinsights.buildDirectory`
 * `vscode-cppinsights.diff`
 * `vscode-cppinsights.args`
 * `vscode-cppinsights.experimental`
