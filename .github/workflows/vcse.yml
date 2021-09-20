@@ -27,15 +27,20 @@ jobs:
         npm install
         npm install -g vsce
         
-    - name: Map insights to cat
-      run: |
-        shopt -s expand_aliases
-        alias insights="cat"
-        
-    - name: Test
+    - name: Pretest
       run: |
         npm install -g eslint
-        npm test
+        npm run pretest
+        
+#    - name: Map insights to cat
+#      run: |
+#        shopt -s expand_aliases
+#        alias insights="cat"
+        
+#    - name: Test
+#      run: |
+#        npm install -g eslint
+#        npm test
     
     - name: Package
       run:
