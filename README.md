@@ -14,9 +14,8 @@ For example if there is an image subfolder under your extension project workspac
 
 This extension requires @andreasfertig's C++ Insights.
 C++ Insights can be found here:
-https://github.com/andreasfertig/cppinsights
-Build or download the latest release.
-Specify the directory to the cppinsights binary in `vscode-cppinsights.path`.
+https://github.com/andreasfertig/cppinsights.
+Build or download the latest release and specify the directory to the cppinsights binary in `vscode-cppinsights.path`.
 
 ## Commands
 * `vscode-cppinsights.insights`: Show C++ insights
