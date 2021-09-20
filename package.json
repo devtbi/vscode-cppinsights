@@ -7,6 +7,7 @@
 		"name": "Tobias Fuchs",
 		"url": "devtbi.io"
 	},
+	"publisher": "Tobias Fuchs (devtbi)",
 	"engines": {
 		"vscode": "^1.54.0"
 	},
