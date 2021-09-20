@@ -31,7 +31,7 @@ function registerCommands(context: vscode.ExtensionContext) {
  * Create the skeleton insights command from the configuration
  */
 export function createCall(config: vscode.WorkspaceConfiguration, cmake_build_dir: string | undefined, filePath: string, outputPath: string | undefined): { path: string, args: (string)[] } {
-	let build_dir = cmake_build_dir || config.get('buildDirectory');
+	const build_dir = cmake_build_dir || config.get('buildDirectory');
 
 	if (!config.get('path')) {
 		vscode.window.showErrorMessage('Missing value for vscode-cppinsights.path');
@@ -90,8 +90,8 @@ function executeInsights(show_diff: boolean = false) {
 	}
 }
 
-function executeInsights2(show_diff: boolean = false, input_document: vscode.TextDocument, options: vscode.TextEditorOptions, input_path: string) {
-	let configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
+function executeInsights2(show_diff = false, input_document: vscode.TextDocument, options: vscode.TextEditorOptions, input_path: string) {
+	const configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
 
 
 	// TODO are code variables resolved, e.g. workspaceFolder?
@@ -155,10 +155,10 @@ function executeInsights2(show_diff: boolean = false, input_document: vscode.Tex
 }
 
 function openInsightsOutput(input_document: vscode.TextDocument, output_path: string, configuration: vscode.WorkspaceConfiguration, options: vscode.TextEditorOptions, show_diff: boolean) {
-	let output_uri = vscode.Uri.file(output_path);
+	const output_uri = vscode.Uri.file(output_path);
 
 	// TODO clarify if formatting requires open TextEditor->visually bad, but seems more reliable
-	let formatting = (doc: vscode.TextDocument) => { format(doc, options, configuration.get("experimental") != undefined ? configuration.get("experimental")! : false) };
+	const formatting = (doc: vscode.TextDocument) => { format(doc, options, configuration.get("experimental") != undefined ? configuration.get("experimental")! : false) };
 
 
 	// was { language: vscode.window.activeTextEditor?.document.languageId, content: stdout }
@@ -175,14 +175,14 @@ function openInsightsOutput(input_document: vscode.TextDocument, output_path: st
 }
 
 function format(doc: vscode.TextDocument, options: vscode.TextEditorOptions, experimental: boolean) {
-	let format_options = experimental ? { tabSize: options.tabSize != undefined ? options.tabSize : 4, insertSpaces: options.insertSpaces || false } as vscode.FormattingOptions : { tabSize: 4, insertSpaces: false };
+	const format_options = experimental ? { tabSize: options.tabSize != undefined ? options.tabSize : 4, insertSpaces: options.insertSpaces || false } as vscode.FormattingOptions : { tabSize: 4, insertSpaces: false };
 	console.log("Formatting " + doc.uri + ' ' + JSON.stringify(format_options));
 
 	// TODO format options are ignored, only TextEditor options are applied, investigate
 	vscode.commands.executeCommand('vscode.executeFormatDocumentProvider', doc.uri, format_options).then((textEdits) => {
 		console.log("Format command");
 		const edits = textEdits as vscode.TextEdit[] || undefined;
-		let jobs: Thenable<boolean>[] = [];
+		const jobs: Thenable<boolean>[] = [];
 		if (edits) {
 			console.log("Applying format");
 			const edit = new vscode.WorkspaceEdit();
@@ -219,7 +219,7 @@ function show(doc: vscode.TextDocument, format: (doc: vscode.TextDocument) => vo
 function diff(left: vscode.TextDocument, right: vscode.TextDocument, format: (doc: vscode.TextDocument) => void) {
 	console.log("Diffing " + left.uri + ' - ' + right.uri);
 
-	vscode.commands.executeCommand('vscode.diff', left.uri, right.uri).then((textEdits) => {
+	vscode.commands.executeCommand('vscode.diff', left.uri, right.uri).then(() => {
 		format(right);
 		console.log("Diff command");
 	}, (rejection_reason) => {
