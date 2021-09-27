@@ -45,7 +45,6 @@ This extension contributes the following settings:
 * `vscode-cppinsights.experimental`
 
 ## Known Issues
-* `vscode-cppinsights.buildDirectoryPrioritizeCMake` is untested
 ### Formatting (`vscode-cppinsights.format`)
 * Enabling the option disables the "preview" property of the output editor
 * When using the `insightsDiff` command, the output is not formatted like the original source
