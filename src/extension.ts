@@ -90,17 +90,18 @@ function executeInsights(show_diff: boolean = false) {
 	}
 }
 
+/**
+ * Execute insights command
+ */
 function executeInsights2(show_diff: boolean = false, input_document: vscode.TextDocument, options: vscode.TextEditorOptions, input_path: string) {
 	let configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
-
 
 	// TODO are code variables resolved, e.g. workspaceFolder?
 
 	// discardDescriptor is required, otherwise cmd is not executed b/c file is used by another process
 	// TODO maybe delete tmp file
 	tmp.file({ prefix: path.basename(input_path), postfix: '.cpp', keep: false, discardDescriptor: true }, function (err, output_path) {
-		// TODO improve condition for cmake usage... getWorkspaceFolder b/c default is ${workspaceFolder}/build
-		const insights_command = createCall(configuration, vscode.workspace.getWorkspaceFolder(input_document.uri) ? vscode.workspace.getConfiguration('cmake').get('buildDirectory') : undefined, input_path, output_path);
+		const insights_command = createCall(configuration, vscode.workspace.getWorkspaceFolder(input_document.uri) && configuration.get("buildDirectoryPrioritizeCMake") ? vscode.workspace.getConfiguration('cmake').get('buildDirectory') : undefined, input_path, output_path);
 
 		console.log("Executing " + JSON.stringify(insights_command));
 
@@ -154,17 +155,20 @@ function executeInsights2(show_diff: boolean = false, input_document: vscode.Tex
 	// });
 }
 
+/**
+ * Open the output. Either show it in an editor besides the source, or open a diff.
+ */
 function openInsightsOutput(input_document: vscode.TextDocument, output_path: string, configuration: vscode.WorkspaceConfiguration, options: vscode.TextEditorOptions, show_diff: boolean) {
 	let output_uri = vscode.Uri.file(output_path);
 
 	// TODO clarify if formatting requires open TextEditor->visually bad, but seems more reliable
-	let formatting = (doc: vscode.TextDocument) => { format(doc, options, configuration.get("experimental") != undefined ? configuration.get("experimental")! : false) };
+	let formatting = (doc: vscode.TextDocument) => { configuration.get("format")! ? format(doc, options, configuration.get("experimental")!) : () => { } };
 
 
 	// was { language: vscode.window.activeTextEditor?.document.languageId, content: stdout }
 	console.log("Openning insights output");
 	vscode.workspace.openTextDocument(output_uri).then((output_document) => {
-		if (!configuration.get("diff") && !show_diff) {
+		if (!show_diff) {
 			show(output_document, formatting, options);
 		}
 		else {
@@ -174,8 +178,11 @@ function openInsightsOutput(input_document: vscode.TextDocument, output_path: st
 	});
 }
 
+/**
+ * Format the output.
+ */
 function format(doc: vscode.TextDocument, options: vscode.TextEditorOptions, experimental: boolean) {
-	let format_options = experimental ? { tabSize: options.tabSize != undefined ? options.tabSize : 4, insertSpaces: options.insertSpaces || false } as vscode.FormattingOptions : { tabSize: 4, insertSpaces: false };
+	let format_options = { tabSize: options.tabSize != undefined ? options.tabSize : 4, insertSpaces: options.insertSpaces || false } as vscode.FormattingOptions;
 	console.log("Formatting " + doc.uri + ' ' + JSON.stringify(format_options));
 
 	// TODO format options are ignored, only TextEditor options are applied, investigate
@@ -190,12 +197,10 @@ function format(doc: vscode.TextDocument, options: vscode.TextEditorOptions, exp
 				edit.replace(doc.uri, textEdit.range, textEdit.newText);
 			}
 			jobs.push(vscode.workspace.applyEdit(edit));
-			if (experimental) {
-				Promise.all(jobs).then(() => {
-					console.log("Saving format");
-					doc.save();
-				});
-			}
+			Promise.all(jobs).then(() => {
+				console.log("Saving format");
+				doc.save();
+			});
 		}
 		else {
 			console.log("No format edits");
@@ -206,6 +211,9 @@ function format(doc: vscode.TextDocument, options: vscode.TextEditorOptions, exp
 	});
 }
 
+/**
+ * Show the output.
+ */
 function show(doc: vscode.TextDocument, format: (doc: vscode.TextDocument) => void, options: vscode.TextEditorOptions) {
 	console.log("Showing " + doc.uri);
 
@@ -216,6 +224,9 @@ function show(doc: vscode.TextDocument, format: (doc: vscode.TextDocument) => vo
 	});
 }
 
+/**
+ * Diff the source and output.
+ */
 function diff(left: vscode.TextDocument, right: vscode.TextDocument, format: (doc: vscode.TextDocument) => void) {
 	console.log("Diffing " + left.uri + ' - ' + right.uri);
 
