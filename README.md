@@ -10,8 +10,21 @@ For example if there is an image subfolder under your extension project workspac
 
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow. -->
 
-## Requirements
+## Features
+This extension allows you to view C++ Insights inside of vscode:
+<p align="center">
+  <br />
+  <img src="image/show.png" alt="Show C++ insights" />
+</p>
 
+or diff the Insights with your original source:
+<p align="center">
+  <br />
+  <img src="image/diff.png" alt="Diff source with C++ insights" />
+</p>
+
+
+## Requirements
 This extension requires @andreasfertig's C++ Insights.
 C++ Insights can be found here:
 https://github.com/andreasfertig/cppinsights.
@@ -22,14 +35,20 @@ Build or download the latest release and specify the path to the cppinsights bin
 * `vscode-cppinsights.insightsDiff`: Show C++ insights diff with original
 
 ## Extension Settings
-
 This extension contributes the following settings:
 
 * `vscode-cppinsights.path`
 * `vscode-cppinsights.buildDirectory`
-* `vscode-cppinsights.diff`
+* `vscode-cppinsights.buildDirectoryPrioritizeCMake`
 * `vscode-cppinsights.args`
+* `vscode-cppinsights.format`
 * `vscode-cppinsights.experimental`
+
+## Known Issues
+* `vscode-cppinsights.buildDirectoryPrioritizeCMake` is untested
+### Formatting (`vscode-cppinsights.format`)
+* Enabling the option disables the "preview" property of the output editor
+* When using the `insightsDiff` command, the output is not formatted like the original source
 
 
 <!-- -----------------------------------------------------------------------------------------------------------

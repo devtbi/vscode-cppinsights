@@ -2,10 +2,10 @@
 	"name": "vscode-cppinsights",
 	"displayName": "C++ Insights",
 	"description": "vscode extension for C++ Insights",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"author": {
 		"name": "Tobias Fuchs",
-		"url": "devtbi.io"
+		"url": "http://devtbi.io"
 	},
 	"publisher": "devtbi",
 	"repository": {
@@ -44,26 +44,33 @@
 						"description": "Build directory of the compilation database.",
 						"scope": "resource"
 					},
+					"vscode-cppinsights.buildDirectoryPrioritizeCMake": {
+						"type": "boolean",
+						"default": true,
+						"description": "If a workspace is active for the source, prioritize the cmake.buildDirectory setting over vscode-cppinsights.buildDirectory.",
+						"scope": "resource"
+					},
 					"vscode-cppinsights.path": {
 						"type": "string",
 						"default": "insights",
 						"description": "Path to the cppinsights executable (insights).",
 						"scope": "resource"
 					},
-					"vscode-cppinsights.diff": {
+					"vscode-cppinsights.format": {
 						"type": "boolean",
-						"description": "Show diff instead of insights output.",
+						"default": true,
+						"description": "Format the cppinsights output.",
 						"scope": "resource"
 					},
 					"vscode-cppinsights.args": {
 						"type": "array",
 						"default": [],
-						"description": "Additional arguments. The final call to insights will look like this: <path> <file> -p <buildDirectory> -- <args>",
+						"description": "Additional arguments (e.g. -std=c++17). The final call to insights will look like this: <path> <file> -p <buildDirectory> --extra-arg <arg1> --extra-arg <arg2> ... .",
 						"scope": "resource"
 					},
 					"vscode-cppinsights.experimental": {
 						"type": "boolean",
-						"description": "Enable experimental features",
+						"description": "Enable experimental features, if available.",
 						"scope": "application"
 					}
 				}
