@@ -31,23 +31,3 @@ jobs:
       run: |
         npm install -g eslint
         npm run pretest
-        
-#    - name: Map insights to cat
-#      run: |
-#        shopt -s expand_aliases
-#        alias insights="cat"
-        
-#    - name: Test
-#      run: |
-#        npm install -g eslint
-#        npm test
-    
-    - name: Package
-      run:
-        vsce package
-        
-    - name: Archive package
-      uses: actions/upload-artifact@v2
-      with:
-        name: vsix
-        path: vscode-cppinsights-*.vsix
