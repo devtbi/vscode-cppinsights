@@ -162,7 +162,7 @@ function openInsightsOutput(input_document: vscode.TextDocument, output_path: st
 	const output_uri = vscode.Uri.file(output_path);
 
 	// TODO clarify if formatting requires open TextEditor->visually bad, but seems more reliable
-	const formatting = (doc: vscode.TextDocument) => { configuration.get("format")! ? format(doc, options, configuration.get("experimental")!) : () => { } };
+	const formatting = (doc: vscode.TextDocument) => { (configuration.get("format") ?? true) ? format(doc, options, (configuration.get("experimental") ?? false)) : () => { return; } };
 
 
 	// was { language: vscode.window.activeTextEditor?.document.languageId, content: stdout }
