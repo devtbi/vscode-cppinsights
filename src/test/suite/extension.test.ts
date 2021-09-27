@@ -7,21 +7,18 @@ import * as path from 'path';
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import * as ins from '../../extension';
+import { EIDRM } from 'constants';
 
-export async function getExtension() {
-	const ext = vscode.extensions.getExtension('vscode-cppinsights');
-	if (!ext) {
-		throw new Error('Extension doesn\'t exist');
-	}
-	return ext.isActive ? Promise.resolve(ext.exports) : ext.activate();
+export function getCppFile(): vscode.Uri {
+	const configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
+	const doc = vscode.workspace.textDocuments.find((doc) => {
+		return doc.fileName.endsWith("cpp");
+	});
+	return doc!.uri;
 }
 
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
-
-	// test('Load extension', () => {
-	// 	getExtension();
-	// });
 
 	test('Execute command', () => {
 		return vscode.commands.executeCommand('vscode-cppinsights.insights').then(() => {
@@ -32,11 +29,10 @@ suite('Extension Test Suite', () => {
 	});
 
 	test('Run executable', () => {
-		let configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
+		const configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
+		const uri = getCppFile();
 
-		let uri = vscode.window.visibleTextEditors[0].document.uri;
-
-		let insights_command = ins.createCall(configuration, undefined, uri.path, undefined);
+		const insights_command = ins.createCall(configuration, undefined, uri.path, undefined);
 
 		const exec_command = ins.callToString(insights_command);
 		return child.exec(exec_command, (error: child.ExecException | null, stdout: string, stderr: string) => {
@@ -47,12 +43,11 @@ suite('Extension Test Suite', () => {
 	});
 
 	test('Run executable tmp path', () => {
-		let configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
-
-		let uri = vscode.window.visibleTextEditors[0].document.uri;
+		const configuration = vscode.workspace.getConfiguration('vscode-cppinsights');
+		const uri = getCppFile();
 
 		tmp.file({ prefix: path.basename("test"), postfix: '.cpp', keep: false, discardDescriptor: true }, function (err, output_path) {
-			let insights_command = ins.createCall(configuration, undefined, uri.path, output_path);
+			const insights_command = ins.createCall(configuration, undefined, uri.path, output_path);
 
 			const exec_command = ins.callToString(insights_command);
 			return child.exec(exec_command, (error: child.ExecException | null, stdout: string, stderr: string) => {
