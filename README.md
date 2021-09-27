@@ -10,6 +10,20 @@ For example if there is an image subfolder under your extension project workspac
 
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow. -->
 
+## Features
+This extension allows you to view C++ Insights inside of vscode:
+<p align="center">
+  <br />
+  <img src="image/show.png" alt="Show C++ insights" />
+</p>
+
+or diff the Insights with your original source:
+<p align="center">
+  <br />
+  <img src="image/diff.png" alt="Diff source with C++ insights" />
+</p>
+
+
 ## Requirements
 This extension requires @andreasfertig's C++ Insights.
 C++ Insights can be found here:
