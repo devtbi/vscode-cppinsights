@@ -13,15 +13,16 @@ For example if there is an image subfolder under your extension project workspac
 ## Features
 This extension allows you to view C++ Insights inside of vscode:
 <p align="center">
-  <br />
   <img src="image/show.png" alt="Show C++ insights" />
 </p>
 
 or diff the Insights with your original source:
 <p align="center">
-  <br />
   <img src="image/diff.png" alt="Diff source with C++ insights" />
 </p>
+
+The extension can utilize a compilation database/compile commands for easy use in existing environments. You can specify a build directory with `vscode-cppinsights.buildDirectory`.
+If a workspace for the active file is available and `vscode-cppinsights.buildDirectoryPrioritizeCMake` is set, the cmake buildDirecotry (from the settings) is used to determine the build direcotry.
 
 
 ## Requirements
