@@ -65,7 +65,7 @@
 					"vscode-cppinsights.args": {
 						"type": "array",
 						"default": [],
-						"description": "Additional arguments (e.g. -std=c++17). The final call to insights will look like this: <path> <file> -p <buildDirectory> --extra-arg <arg1> --extra-arg <arg2> ... .",
+						"description": "Additional arguments (e.g. -std=c++17). The final call to insights will look like this: <path> <file> -p <buildDirectory> --extra-arg=\"<arg1>\" --extra-arg=\"<arg2>\" ... .",
 						"scope": "resource"
 					},
 					"vscode-cppinsights.experimental": {

@@ -43,12 +43,9 @@ export function createCall(config: vscode.WorkspaceConfiguration, cmake_build_di
 		args.push("-p=\"" + build_dir + "\"");
 
 	if ((config.get<string[]>('args')?.length ?? 0) > 0) {
-		const extra_args = config.get<string[]>('args')!.map(x => ["--extra-arg", x]);
+		const extra_args = config.get<string[]>('args')!.map(x => '--extra-arg="' + x + '"');
 
-		let extra_args_flat: string[] = [];
-		extra_args_flat = extra_args_flat.concat(...extra_args);
-
-		args = [...args, ...extra_args_flat];
+		args = [...args, ...extra_args];
 	}
 
 	if (outputPath) {
