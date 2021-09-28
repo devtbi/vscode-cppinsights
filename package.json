@@ -8,6 +8,7 @@
 		"name": "Tobias Fuchs",
 		"url": "http://devtbi.io"
 	},
+	"icon": "image/icon.png",
 	"publisher": "devtbi",
 	"repository": {
 		"type": "git",
