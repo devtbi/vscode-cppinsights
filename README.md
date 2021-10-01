@@ -1,4 +1,4 @@
-# C++ Insights for vscode
+# C++ Insights for Visual Studio Code (VSCode)
 
 <!-- ## Introduction -->
 
