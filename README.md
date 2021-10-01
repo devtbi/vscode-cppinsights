@@ -21,8 +21,8 @@ or diff the Insights with your original source:
   <img src="image/diff.png" alt="Diff source with C++ insights" />
 </p>
 
-The extension can utilize a compilation database/compile commands for easy use in existing environments. You can specify a build directory with `vscode-cppinsights.buildDirectory`.
-If a workspace for the active file is available and `vscode-cppinsights.buildDirectoryPrioritizeCMake` is set, the cmake buildDirecotry (from the settings) is used to determine the build direcotry.
+The extension can utilize a compilation database/compile commands for easy use in existing environments. You can specify a directory containing the compilation database, aka the  build directory with `vscode-cppinsights.buildDirectory`.
+If a workspace for the active file is available and `vscode-cppinsights.buildDirectoryPrioritizeCMake` is set, the `cmake.buildDirecotry` is used to determine the build direcotry.
 
 
 ## Requirements
@@ -37,7 +37,7 @@ Build or download the latest release and specify the path to the cppinsights bin
 
 ## Extension Settings
 This extension contributes the following settings:
-
+(You can find descriptions in the settings UI)
 * `vscode-cppinsights.path`
 * `vscode-cppinsights.buildDirectory`
 * `vscode-cppinsights.buildDirectoryPrioritizeCMake`
