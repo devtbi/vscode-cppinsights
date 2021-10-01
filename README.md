@@ -22,7 +22,7 @@ or diff the Insights with your original source:
 </p>
 
 The extension can utilize a compilation database/compile commands for easy use in existing environments. You can specify a directory containing the compilation database, aka the  build directory, with `vscode-cppinsights.buildDirectory`.
-If a workspace for the active file is available and `vscode-cppinsights.buildDirectoryPrioritizeCMake` is set, the `cmake.buildDirecotry` is used to determine the build direcotry.
+If the active file is part of a workspace, and `vscode-cppinsights.buildDirectoryPrioritizeCMake` is set, the `cmake.buildDirecotry` is used to determine the build direcotry.
 
 
 ## Requirements
