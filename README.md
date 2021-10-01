@@ -45,6 +45,9 @@ This extension contributes the following settings:
 * `vscode-cppinsights.format`
 * `vscode-cppinsights.experimental`
 
+## Contribute
+If you want to contribute, have an idea for a feature, or want to report an issue, please visit the [GitHub repository](https://github.com/devtbi/vscode-cppinsights).
+
 ## Known Issues
 ### Formatting (`vscode-cppinsights.format`)
 * Enabling the option disables the "preview" property of the output editor
