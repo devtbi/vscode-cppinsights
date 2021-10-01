@@ -12,12 +12,12 @@ For example if there is an image subfolder under your extension project workspac
 
 ## Features
 This extension allows you to view C++ Insights inside of vscode:
-<p align="center">
+<p>
   <img src="image/show.png" alt="Show C++ insights" />
 </p>
 
 or diff the Insights with your original source:
-<p align="center">
+<p>
   <img src="image/diff.png" alt="Diff source with C++ insights" />
 </p>
 
