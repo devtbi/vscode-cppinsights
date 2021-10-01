@@ -1,4 +1,5 @@
 # C++ Insights for Visual Studio Code (VSCode)
+This is an extension to enable convenient use of C++ Insights inside VSCode.
 
 <!-- ## Introduction -->
 
