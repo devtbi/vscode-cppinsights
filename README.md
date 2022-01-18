@@ -48,6 +48,8 @@ This extension contributes the following settings:
 If you want to contribute, have an idea for a feature, or want to report an issue, please visit the [GitHub repository](https://github.com/devtbi/vscode-cppinsights).
 
 ## Known Issues
+### Compiler Error on Windows
+* Using Microsoft/Visual Studio STL with C++ Insights might report "#error STL1000: Unexpected compiler version". You can define _ALLOW_COMPILER_AND_STL_VERSION_MISMATCH (before any includes) as a workaround ([C++ Insights Issue](https://github.com/andreasfertig/cppinsights/issues/422)).
 ### Formatting (`vscode-cppinsights.format`)
 * Enabling the option disables the "preview" property of the output editor
 * When using the `insightsDiff` command, the output is not formatted like the original source
