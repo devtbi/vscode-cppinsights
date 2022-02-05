@@ -38,7 +38,7 @@ export function createCall(config: vscode.WorkspaceConfiguration, cmake_build_di
 		throw vscode.CancellationError;
 	}
 
-	let args: string[] = [filePath];
+	let args: string[] = ['"' + filePath + '"'];
 	if (build_dir && build_dir.length > 0)
 		args.push("-p=\"" + build_dir + "\"");
 
