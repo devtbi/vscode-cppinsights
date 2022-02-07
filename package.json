@@ -2,7 +2,7 @@
 	"name": "vscode-cppinsights",
 	"displayName": "C++ Insights",
 	"description": "vscode extension for C++ Insights",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"author": {
 		"name": "Tobias Fuchs",
 		"url": "http://devtbi.io"
