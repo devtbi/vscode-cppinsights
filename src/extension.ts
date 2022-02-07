@@ -30,7 +30,7 @@ function registerCommands(context: vscode.ExtensionContext) {
 /**
  * Create the skeleton insights command from the configuration
  */
-export function createCall(config: vscode.WorkspaceConfiguration, cmake_build_dir: string | undefined, filePath: string, outputPath: string | undefined): { path: string, args: (string)[] } {
+export function createCall(config: vscode.WorkspaceConfiguration, cmake_build_dir: string | undefined, filePath: string, outputPath: string | undefined): { path: vscode.ShellQuotedString, args: (string | vscode.ShellQuotedString)[] } {
 	const build_dir = cmake_build_dir || config.get('buildDirectory');
 
 	if (!config.get('path')) {
@@ -38,9 +38,11 @@ export function createCall(config: vscode.WorkspaceConfiguration, cmake_build_di
 		throw vscode.CancellationError;
 	}
 
-	let args: string[] = [filePath];
+	let args: (string | vscode.ShellQuotedString)[] = [{ value: filePath, quoting: vscode.ShellQuoting.Escape }];
 	if (build_dir && build_dir.length > 0)
-		args.push("-p=\"" + build_dir + "\"");
+		args.push({
+			value: "-p=" + build_dir, quoting: vscode.ShellQuoting.Escape
+		});
 
 	if ((config.get<string[]>('args')?.length ?? 0) > 0) {
 		const extra_args = config.get<string[]>('args')!.map(x => ["--extra-arg", x]);
@@ -53,15 +55,15 @@ export function createCall(config: vscode.WorkspaceConfiguration, cmake_build_di
 
 	if (outputPath) {
 		args.push(">");
-		args.push(outputPath);
+		args.push({ value: outputPath, quoting: vscode.ShellQuoting.Escape });
 	}
 
 	return {
-		path: config.get('path')!, args: args
+		path: { value: config.get('path')!, quoting: vscode.ShellQuoting.Escape }, args: args
 	};
 }
 
-export function callToString(insights_call: { path: string, args: (string)[] }): string {
+export function callToString(insights_call: { path: vscode.ShellQuotedString, args: (string | vscode.ShellQuotedString)[] }): string {
 	return insights_call.path + ' ' + insights_call.args.join(' ');
 }
 
