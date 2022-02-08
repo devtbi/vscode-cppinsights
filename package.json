@@ -2,7 +2,7 @@
 	"name": "vscode-cppinsights",
 	"displayName": "C++ Insights",
 	"description": "vscode extension for C++ Insights",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"author": {
 		"name": "Tobias Fuchs",
 		"url": "http://devtbi.io"
@@ -16,7 +16,14 @@
 	"engines": {
 		"vscode": "^1.54.0"
 	},
+	"keywords": [
+		"C++",
+		"Cpp",
+		"Insight",
+		"Insights"
+	],
 	"categories": [
+		"Education",
 		"Other"
 	],
 	"activationEvents": [
@@ -28,16 +35,16 @@
 		"commands": [
 			{
 				"command": "vscode-cppinsights.insights",
-				"title": "Show C++ insights"
+				"title": "Show C++ Insights"
 			},
 			{
 				"command": "vscode-cppinsights.insightsDiff",
-				"title": "Show C++ insights diff with original"
+				"title": "Show C++ Insights diff with original"
 			}
 		],
 		"configuration": [
 			{
-				"title": "C++ insights",
+				"title": "C++ Insights",
 				"properties": {
 					"vscode-cppinsights.buildDirectory": {
 						"type": "string",
